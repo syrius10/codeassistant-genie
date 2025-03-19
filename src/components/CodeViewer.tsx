@@ -23,6 +23,7 @@ const CodeViewer = ({
   const [copied, setCopied] = useState(false);
   const [lineCount, setLineCount] = useState(0);
   const [maxLineNumberWidth, setMaxLineNumberWidth] = useState(0);
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -34,6 +35,15 @@ const CodeViewer = ({
     setMaxLineNumberWidth(String(lines.length).length * 10 + 10); // estimate of character width
   }, [code]);
 
+  useEffect(() => {
+    if (inView && initialFocus) {
+      const timer = setTimeout(() => {
+        setIsHighlighted(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [inView, initialFocus]);
+
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
     setCopied(true);
@@ -44,22 +54,22 @@ const CodeViewer = ({
     <div 
       ref={ref}
       className={cn(
-        "glass-card transition-all duration-700 ease-ios overflow-hidden",
+        "glass-card transition-all duration-700 ease-ios overflow-hidden shadow-subtle hover:shadow-subtle-lg",
         inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       )}
     >
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border backdrop-blur-sm">
         <span className="text-sm font-medium">{title}</span>
         <Button 
           variant="ghost" 
           size="sm" 
-          className="h-8 gap-1.5 px-2 text-xs"
+          className="h-8 gap-1.5 px-2 text-xs transition-all duration-300 hover:bg-primary/20"
           onClick={copyToClipboard}
         >
           {copied ? (
             <>
-              <Check className="h-3.5 w-3.5" />
-              <span>Copied</span>
+              <Check className="h-3.5 w-3.5 text-green-500" />
+              <span className="text-green-500">Copied</span>
             </>
           ) : (
             <>
@@ -73,7 +83,7 @@ const CodeViewer = ({
       <div className="p-4 overflow-x-auto">
         <pre className={cn(
           "text-sm font-mono",
-          initialFocus && "animate-blur-in"
+          initialFocus && isHighlighted && "animate-pulse"
         )}>
           {showLineNumbers ? (
             <div className="flex">

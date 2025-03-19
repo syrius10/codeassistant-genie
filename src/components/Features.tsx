@@ -21,16 +21,16 @@ const FeatureCard = ({ icon, title, description, className, delay }: FeatureCard
     <div 
       ref={ref}
       className={cn(
-        "glass-card p-8 transition-all duration-700 ease-ios",
+        "glass-card p-8 transition-all duration-700 ease-ios hover:shadow-subtle group",
         inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
         delay,
         className
       )}
     >
-      <div className="p-3 bg-primary/10 rounded-lg w-fit mb-5">
+      <div className="p-3 bg-primary/10 rounded-lg w-fit mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
         {icon}
       </div>
-      <h3 className="text-xl font-medium mb-3">{title}</h3>
+      <h3 className="text-xl font-medium mb-3 group-hover:text-primary transition-colors duration-300">{title}</h3>
       <p className="text-secondary">{description}</p>
     </div>
   );
@@ -43,11 +43,11 @@ const Features = () => {
   });
 
   return (
-    <section id="features" className="py-24 px-6 lg:px-8" ref={sectionRef}>
+    <section id="features" className="py-24 px-6 lg:px-8 bg-gradient-to-b from-background to-accent/10" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className={cn(
-            "text-3xl md:text-4xl font-medium mb-5 transition-all duration-700 ease-ios",
+            "text-3xl md:text-4xl font-medium mb-5 transition-all duration-700 ease-ios text-gradient-primary",
             sectionInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}>
             Powerful AI-Driven Features
@@ -104,26 +104,26 @@ const Features = () => {
           />
         </div>
 
-        <div className="mt-16 glass-card p-8 md:p-10 lg:p-12">
+        <div className="mt-16 glass-card p-8 md:p-10 lg:p-12 shadow-subtle hover:shadow-subtle-lg transition-all duration-300">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className={cn(
               "transition-all duration-700 ease-ios",
               sectionInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
             )}>
-              <h3 className="text-2xl md:text-3xl font-medium mb-5">Advanced AI Architecture</h3>
+              <h3 className="text-2xl md:text-3xl font-medium mb-5 text-gradient-primary">Advanced AI Architecture</h3>
               <p className="text-secondary mb-6">
                 Built on a foundation of cutting-edge AI models and autonomous agent frameworks, CodePilot.AI learns from each interaction to continuously improve its capabilities.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
                   <Layers className="h-5 w-5 text-primary flex-shrink-0" />
                   <span>Autonomous AI Agent using LangChain & AutoGen</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
                   <LineChart className="h-5 w-5 text-primary flex-shrink-0" />
                   <span>Contextual memory for better understanding</span>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
                   <Code className="h-5 w-5 text-primary flex-shrink-0" />
                   <span>GPT-4 powered code analysis & generation</span>
                 </div>
@@ -134,7 +134,7 @@ const Features = () => {
               "transition-all duration-700 ease-ios",
               sectionInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
             )}>
-              <div className="glass h-[300px] md:h-[350px] rounded-xl overflow-hidden relative shadow-subtle">
+              <div className="glass h-[300px] md:h-[350px] rounded-xl overflow-hidden relative shadow-subtle hover:shadow-subtle-lg transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-8 bg-muted/50 flex items-center px-4">
                   <div className="flex gap-2">
                     <div className="h-3 w-3 rounded-full bg-red-500/70" />

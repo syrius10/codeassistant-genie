@@ -74,7 +74,7 @@ module.exports = {
 }`;
 
   return (
-    <section id="github" className="py-24 px-6 lg:px-8 bg-accent/50">
+    <section id="github" className="py-24 px-6 lg:px-8 bg-gradient-to-b from-accent/30 to-accent/50">
       <div 
         ref={ref}
         className={cn(
@@ -83,16 +83,16 @@ module.exports = {
         )}
       >
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-medium mb-5">Connect Your GitHub Repository</h2>
+          <h2 className="text-3xl md:text-4xl font-medium mb-5 text-gradient-primary">Connect Your GitHub Repository</h2>
           <p className="text-lg text-secondary max-w-2xl mx-auto">
             Connect CodePilot.AI to your GitHub repository to start analyzing and optimizing your codebase.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="glass-card p-8">
+          <div className="glass-card p-8 shadow-subtle hover:shadow-subtle-lg transition-all duration-300">
             <div className="mb-8">
-              <div className="p-3 bg-primary/10 rounded-lg w-fit mb-5">
+              <div className="p-3 bg-primary/10 rounded-lg w-fit mb-5 rotate-3 hover:rotate-0 transition-all duration-300">
                 <Github className="h-6 w-6 text-primary" />
               </div>
               <h3 className="text-xl font-medium mb-3">Repository Connection</h3>
@@ -109,13 +109,13 @@ module.exports = {
                   placeholder="https://github.com/username/repository"
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
-                  className="h-12"
+                  className="h-12 transition-all duration-300 focus:ring-2 focus:ring-primary/30"
                 />
               </div>
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${connected ? 'bg-green-500' : 'bg-muted'}`}>
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors duration-300 ${connected ? 'bg-green-500' : 'bg-muted'}`}>
                     {connected && <Check className="h-3 w-3 text-white" />}
                   </div>
                   <span className={connected ? 'text-green-500' : 'text-muted-foreground'}>
@@ -126,16 +126,34 @@ module.exports = {
               
               <Button 
                 type="submit" 
-                className="w-full h-12" 
+                className="w-full h-12 transition-all duration-300" 
                 disabled={isConnecting || connected}
               >
-                {isConnecting ? 'Connecting...' : connected ? 'Connected' : 'Connect Repository'}
-                {!isConnecting && !connected && <ArrowRight className="ml-2 h-4 w-4" />}
+                {isConnecting ? (
+                  <>
+                    <span className="mr-2">Connecting</span>
+                    <span className="flex gap-1">
+                      <span className="animate-bounce">.</span>
+                      <span className="animate-bounce animation-delay-200">.</span>
+                      <span className="animate-bounce animation-delay-400">.</span>
+                    </span>
+                  </>
+                ) : connected ? (
+                  <>
+                    Connected
+                    <Check className="ml-2 h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    Connect Repository
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
             </form>
 
             {connected && (
-              <div className="mt-8 p-4 bg-green-500/10 border border-green-500/20 rounded-lg text-sm">
+              <div className="mt-8 p-4 bg-green-500/10 border border-green-500/20 rounded-lg text-sm animate-fade-in">
                 <p className="font-medium text-green-600 mb-1">Successfully Connected</p>
                 <p className="text-secondary">
                   Your repository has been successfully connected to CodePilot.AI. 
