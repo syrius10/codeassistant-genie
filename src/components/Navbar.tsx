@@ -34,6 +34,7 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center gap-8 animate-fade-in">
           <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
           <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">Dashboard</Link>
+          <Link to="/pricing" className="text-sm font-medium hover:text-primary transition-colors">Pricing</Link>
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
           <a href="#github" className="text-sm font-medium hover:text-primary transition-colors">Connect GitHub</a>
         </nav>
@@ -44,7 +45,9 @@ const Navbar = () => {
             <span>GitHub</span>
           </Button>
           
-          <Button size="sm" className="bg-primary hover:bg-primary/90 transition-colors">Get Started</Button>
+          <Link to="/pricing">
+            <Button size="sm" className="bg-primary hover:bg-primary/90 transition-colors">Get Started</Button>
+          </Link>
         </div>
         
         <button 
@@ -76,6 +79,13 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Dashboard
+            </Link>
+            <Link 
+              to="/pricing" 
+              className="text-lg font-medium p-2" 
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Pricing
             </Link>
             <a 
               href="#features" 
