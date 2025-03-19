@@ -4,11 +4,27 @@ import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { formatPercentage } from '@/lib/utils';
-import { AlertCircle, Crown, ArrowRight } from 'lucide-react';
+import { 
+  AlertCircle, Crown, ArrowRight, 
+  CheckCircle2, XCircle, Code, 
+  GitBranch, TestTube, Workflow,
+  Shield, MessageSquare, Award
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const FeatureItem = ({ name, available }: { name: string, available: boolean }) => (
+  <div className="flex items-center gap-2 text-sm py-1">
+    {available ? (
+      <CheckCircle2 className="h-4 w-4 text-green-500" />
+    ) : (
+      <XCircle className="h-4 w-4 text-muted-foreground" />
+    )}
+    <span className={!available ? "text-muted-foreground" : ""}>{name}</span>
+  </div>
+);
+
 const SubscriptionStatus = () => {
-  const { userTier, usageStats } = useSubscription();
+  const { userTier, usageStats, tierFeatures } = useSubscription();
   
   const repoUsagePercentage = 
     usageStats.reposLimit === Infinity ? 
@@ -19,6 +35,11 @@ const SubscriptionStatus = () => {
     usageStats.commitsLimit === Infinity ? 
     (usageStats.commitsUsed > 0 ? 25 : 0) : 
     (usageStats.commitsUsed / usageStats.commitsLimit) * 100;
+    
+  const aiCreditsPercentage = 
+    usageStats.aiCreditsLimit === Infinity ? 
+    (usageStats.aiCreditsUsed > 0 ? 25 : 0) : 
+    (usageStats.aiCreditsUsed / usageStats.aiCreditsLimit) * 100;
   
   return (
     <div className="glass-card p-6">
@@ -49,7 +70,7 @@ const SubscriptionStatus = () => {
           <Alert className="bg-primary/10 border-primary/20">
             <AlertCircle className="h-4 w-4 text-primary" />
             <AlertDescription>
-              You're on the Free tier with limited features. Upgrade to Pro to unlock more capabilities.
+              You're on the Free tier with limited features. Upgrade to Pro to unlock AI capabilities.
             </AlertDescription>
           </Alert>
         )}
@@ -72,6 +93,29 @@ const SubscriptionStatus = () => {
             </span>
           </div>
           <Progress value={commitUsagePercentage} className="h-2" />
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm">AI Credits</span>
+            <span className="text-sm">
+              {usageStats.aiCreditsUsed}/{usageStats.aiCreditsLimit === Infinity ? 'Unlimited' : usageStats.aiCreditsLimit}
+            </span>
+          </div>
+          <Progress value={aiCreditsPercentage} className="h-2" />
+        </div>
+        
+        <div className="border-t border-border pt-4">
+          <h4 className="font-medium mb-2">Available Features</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+            <FeatureItem name="AI Code Generation" available={tierFeatures.hasCodeGeneration} />
+            <FeatureItem name="AI Code Refactoring" available={tierFeatures.hasRefactoring} />
+            <FeatureItem name="Test Generation" available={tierFeatures.hasTestGeneration} />
+            <FeatureItem name="CI/CD Automation" available={tierFeatures.hasCICD} />
+            <FeatureItem name="Advanced Security" available={tierFeatures.hasAdvancedSecurity} />
+            <FeatureItem name="AI Chat Assistant" available={tierFeatures.hasChatAssistant} />
+            <FeatureItem name="Priority Support" available={tierFeatures.hasPrioritySupport} />
+          </div>
         </div>
         
         {userTier === 'free' && commitUsagePercentage > 80 && (

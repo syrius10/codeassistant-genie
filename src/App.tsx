@@ -8,10 +8,29 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
-import { SubscriptionProvider } from "./contexts/SubscriptionContext";
+import { SubscriptionProvider, useSubscription } from "./contexts/SubscriptionContext";
 import ChatAssistant from "./components/ChatAssistant";
 
 const queryClient = new QueryClient();
+
+const AppContent = () => {
+  const { userTier } = useSubscription();
+  
+  return (
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/pricing" element={<Pricing />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <ChatAssistant userTier={userTier} />
+      </BrowserRouter>
+    </>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -19,16 +38,7 @@ const App = () => (
       <SubscriptionProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/pricing" element={<Pricing />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <ChatAssistant userTier="free" />
-        </BrowserRouter>
+        <AppContent />
       </SubscriptionProvider>
     </TooltipProvider>
   </QueryClientProvider>
