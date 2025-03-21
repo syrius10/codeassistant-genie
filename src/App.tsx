@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
-import { SubscriptionProvider, useSubscription } from "./contexts/SubscriptionContext";
+import { SubscriptionProvider, useSubscription } from "./contexts/subscription";
 import ChatAssistant from "./components/ChatAssistant";
 
 const queryClient = new QueryClient();

@@ -1,5 +1,5 @@
 
-import { useSubscription } from '@/contexts/SubscriptionContext';
+import { useSubscription } from '@/contexts/subscription';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';

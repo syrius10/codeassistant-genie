@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { ArrowLeft, Cpu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription } from "@/contexts/subscription";
 import Header from "./components/Header";
 import RepositoryOverview from "./components/RepositoryOverview";
 import AIRecommendations from "./components/AIRecommendations";

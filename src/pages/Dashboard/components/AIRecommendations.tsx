@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle2, Cpu, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CodeViewer from "@/components/CodeViewer";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription } from "@/contexts/subscription";
 
 interface AIRecommendationsProps {
   isLoading: boolean;
