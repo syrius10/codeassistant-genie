@@ -72,12 +72,12 @@ export default {
 					cyan: '#0184bc',
 					gray: '#383a42',
 				},
-				// Enhanced text colors with softer contrast
+				// Updated text colors to black
 				text: {
-					primary: '#37474F',
-					secondary: '#546E7A',
-					muted: '#78909C',
-					subtle: '#90A4AE'
+					primary: '#000000',
+					secondary: '#000000',
+					muted: '#000000',
+					subtle: '#000000'
 				}
 			},
 			borderRadius: {
