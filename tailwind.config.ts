@@ -71,6 +71,12 @@ export default {
 					purple: '#a626a4',
 					cyan: '#0184bc',
 					gray: '#383a42',
+				},
+				// Enhanced text colors for better visibility
+				text: {
+					primary: '#222222',
+					secondary: '#404040',
+					muted: '#505050',
 				}
 			},
 			borderRadius: {

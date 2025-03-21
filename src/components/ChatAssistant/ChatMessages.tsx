@@ -35,7 +35,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
             <Bot className="h-4 w-4 text-primary" />
           </div>
           <div className="glass-card p-3 rounded-lg rounded-tl-none text-sm">
-            <p>
+            <p className="text-gray-900 font-medium">
               {userTier === 'enterprise' 
                 ? "Welcome to your priority AI assistant! I'm here to provide expert help with your development workflow. How can I assist you today?"
                 : "Hi there! I'm your AI assistant. How can I help you with CodePilot.AI today?"}
@@ -60,8 +60,8 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
             <div className={cn(
               "p-3 rounded-lg text-sm max-w-[80%]",
               message.role === 'user' 
-                ? "bg-primary text-primary-foreground rounded-tr-none"
-                : "glass-card rounded-tl-none"
+                ? "bg-primary text-primary-foreground font-medium rounded-tr-none"
+                : "glass-card rounded-tl-none text-gray-900 font-medium"
             )}>
               <p>{message.content}</p>
             </div>

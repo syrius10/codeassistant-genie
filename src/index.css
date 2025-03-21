@@ -39,7 +39,7 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 rounded-xl transition-all;
+    @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-xl transition-all;
   }
   
   .shadow-subtle {
@@ -51,7 +51,16 @@
   }
   
   .text-gradient-primary {
-    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent;
+    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-semibold;
+  }
+
+  /* Improved text visibility classes */
+  .text-high-contrast {
+    @apply text-gray-900;
+  }
+  
+  .text-secondary {
+    @apply text-gray-700; 
   }
 }
 
