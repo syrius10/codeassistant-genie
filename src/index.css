@@ -11,19 +11,19 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --primary: 215 25% 27%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 215 25% 27%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 215 25% 27%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 215 25% 27%;
     --radius: 1rem;
   }
 
@@ -39,7 +39,7 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 rounded-xl transition-all;
+    @apply bg-white/70 backdrop-blur-md border border-white/20 rounded-xl transition-all;
   }
   
   .shadow-subtle {
@@ -51,16 +51,20 @@
   }
   
   .text-gradient-primary {
-    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-semibold;
+    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent font-medium;
   }
 
-  /* Improved text visibility classes */
+  /* Improved text visibility classes with softer contrast */
   .text-high-contrast {
-    @apply text-gray-900;
+    @apply text-slate-700;
   }
   
   .text-secondary {
-    @apply text-gray-700; 
+    @apply text-slate-600; 
+  }
+  
+  .text-subtle {
+    @apply text-slate-500;
   }
 }
 

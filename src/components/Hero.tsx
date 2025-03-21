@@ -18,8 +18,8 @@ const Hero = () => {
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 lg:px-8 pt-24 pb-20">
       {/* Background gradient */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] opacity-20 blur-3xl bg-gradient-radial from-primary to-transparent transform translate-x-1/4 -translate-y-1/4" />
-        <div className="absolute bottom-0 left-0 -z-10 h-[600px] w-[600px] opacity-20 blur-3xl bg-gradient-radial from-primary to-transparent transform -translate-x-1/4 translate-y-1/4" />
+        <div className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] opacity-15 blur-3xl bg-gradient-radial from-primary to-transparent transform translate-x-1/4 -translate-y-1/4" />
+        <div className="absolute bottom-0 left-0 -z-10 h-[600px] w-[600px] opacity-15 blur-3xl bg-gradient-radial from-primary to-transparent transform -translate-x-1/4 translate-y-1/4" />
       </div>
 
       {/* Icon animation */}
@@ -31,7 +31,7 @@ const Hero = () => {
       </div>
 
       {/* Headline */}
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-center leading-tight mb-6 max-w-4xl animate-fade-up">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-center leading-tight mb-6 max-w-4xl animate-fade-up text-slate-700">
         <span className="typewriter-container">
           <span className="typewriter">AI-Powered Development Assistant</span>
         </span>
@@ -42,7 +42,7 @@ const Hero = () => {
       </h1>
 
       {/* Subtitle */}
-      <p className="text-lg md:text-xl text-secondary max-w-2xl text-center mb-10 animate-fade-up animation-delay-200">
+      <p className="text-lg md:text-xl text-slate-600 max-w-2xl text-center mb-10 animate-fade-up animation-delay-200">
         CodePilot.AI analyzes, optimizes, and deploys your code with the precision and elegance of advanced artificial intelligence.
       </p>
 
@@ -61,15 +61,15 @@ const Hero = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 max-w-4xl w-full animate-fade-up animation-delay-400">
         <div className="glass-card p-6 text-center">
           <p className="text-4xl font-bold text-primary mb-2">95%+</p>
-          <p className="text-sm text-secondary">Code Coverage</p>
+          <p className="text-sm text-slate-600">Code Coverage</p>
         </div>
         <div className="glass-card p-6 text-center">
           <p className="text-4xl font-bold text-primary mb-2">100%</p>
-          <p className="text-sm text-secondary">Automated Testing</p>
+          <p className="text-sm text-slate-600">Automated Testing</p>
         </div>
         <div className="glass-card p-6 text-center">
           <p className="text-4xl font-bold text-primary mb-2">24/7</p>
-          <p className="text-sm text-secondary">Development Support</p>
+          <p className="text-sm text-slate-600">Development Support</p>
         </div>
       </div>
 
