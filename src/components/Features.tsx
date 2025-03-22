@@ -1,7 +1,8 @@
 
-import { Code, GitBranch, GitPullRequest, Cog, AirplayIcon, Container, Layers, LineChart } from 'lucide-react';
+import { Code, GitBranch, GitPullRequest, Cog, AirplayIcon, Container, Layers, LineChart, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useInView } from 'react-intersection-observer';
+import { useState } from 'react';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -16,22 +17,50 @@ const FeatureCard = ({ icon, title, description, className, delay }: FeatureCard
     triggerOnce: true,
     threshold: 0.1,
   });
+  
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div 
       ref={ref}
       className={cn(
-        "glass-card p-8 transition-all duration-700 ease-ios hover:shadow-subtle group",
+        "glass-card p-8 transition-all duration-700 ease-bounce relative overflow-hidden group",
         inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
         delay,
         className
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="p-3 bg-primary/10 rounded-lg w-fit mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+      {/* Gradient background that appears on hover */}
+      <div className={cn(
+        "absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 transition-opacity duration-500",
+        isHovered ? "opacity-100" : "opacity-0"
+      )} />
+      
+      <div className={cn(
+        "p-3 bg-primary/10 rounded-lg w-fit mb-5 transition-all duration-500 relative z-10",
+        isHovered ? "bg-primary/20 scale-110 rotate-3" : ""
+      )}>
         {icon}
       </div>
-      <h3 className="text-xl font-medium mb-3 group-hover:text-primary transition-colors duration-300">{title}</h3>
-      <p className="text-secondary">{description}</p>
+      
+      <h3 className={cn(
+        "text-xl font-medium mb-3 transition-colors duration-300 relative z-10",
+        isHovered ? "text-gradient-primary" : ""
+      )}>
+        {title}
+      </h3>
+      
+      <p className="text-foreground/70 relative z-10">{description}</p>
+      
+      {/* Animated sparkle that appears on hover */}
+      <Sparkles 
+        className={cn(
+          "absolute bottom-3 right-3 h-5 w-5 text-accent transition-all duration-500",
+          isHovered ? "opacity-100" : "opacity-0"
+        )} 
+      />
     </div>
   );
 };
@@ -43,17 +72,23 @@ const Features = () => {
   });
 
   return (
-    <section id="features" className="py-24 px-6 lg:px-8 bg-gradient-to-b from-background to-accent/10" ref={sectionRef}>
+    <section id="features" className="py-24 px-6 lg:px-8 relative" ref={sectionRef}>
+      {/* Background elements */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 right-1/3 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[150px]" />
+        <div className="absolute bottom-1/3 left-1/4 h-[350px] w-[350px] rounded-full bg-accent/5 blur-[150px]" />
+      </div>
+      
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className={cn(
-            "text-3xl md:text-4xl font-medium mb-5 transition-all duration-700 ease-ios text-gradient-primary",
+            "text-3xl md:text-4xl font-bold mb-5 transition-all duration-700 ease-ios text-gradient-primary",
             sectionInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}>
             Powerful AI-Driven Features
           </h2>
           <p className={cn(
-            "text-lg text-secondary max-w-2xl mx-auto transition-all duration-700 ease-ios animation-delay-100",
+            "text-lg text-foreground/70 max-w-2xl mx-auto transition-all duration-700 ease-ios animation-delay-100",
             sectionInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}>
             CodePilot.AI integrates seamlessly with your development workflow, offering intelligent automation at every stage.
@@ -104,45 +139,50 @@ const Features = () => {
           />
         </div>
 
-        <div className="mt-16 glass-card p-8 md:p-10 lg:p-12 shadow-subtle hover:shadow-subtle-lg transition-all duration-300">
+        <div className="mt-16 glass-card p-8 md:p-10 lg:p-12 shadow-subtle-lg hover:shadow-glow-primary transition-all duration-500 overflow-hidden group">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className={cn(
               "transition-all duration-700 ease-ios",
               sectionInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
             )}>
-              <h3 className="text-2xl md:text-3xl font-medium mb-5 text-gradient-primary">Advanced AI Architecture</h3>
-              <p className="text-secondary mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold mb-5 text-gradient-primary">Advanced AI Architecture</h3>
+              <p className="text-foreground/70 mb-6">
                 Built on a foundation of cutting-edge AI models and autonomous agent frameworks, CodePilot.AI learns from each interaction to continuously improve its capabilities.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 p-2 hover:bg-primary/5 rounded-lg transition-colors duration-300 group-hover:translate-x-2">
                   <Layers className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>Autonomous AI Agent using LangChain & AutoGen</span>
+                  <span className="text-foreground/80">Autonomous AI Agent using LangChain & AutoGen</span>
                 </div>
-                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 p-2 hover:bg-primary/5 rounded-lg transition-colors duration-300 group-hover:translate-x-2 animation-delay-100">
                   <LineChart className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>Contextual memory for better understanding</span>
+                  <span className="text-foreground/80">Contextual memory for better understanding</span>
                 </div>
-                <div className="flex items-center gap-3 transition-transform duration-300 hover:translate-x-2">
+                <div className="flex items-center gap-3 p-2 hover:bg-primary/5 rounded-lg transition-colors duration-300 group-hover:translate-x-2 animation-delay-200">
                   <Code className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>GPT-4 powered code analysis & generation</span>
+                  <span className="text-foreground/80">GPT-4 powered code analysis & generation</span>
                 </div>
               </div>
             </div>
             
             <div className={cn(
-              "transition-all duration-700 ease-ios",
+              "transition-all duration-700 ease-ios overflow-hidden",
               sectionInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
             )}>
-              <div className="glass h-[300px] md:h-[350px] rounded-xl overflow-hidden relative shadow-subtle hover:shadow-subtle-lg transition-all duration-300">
-                <div className="absolute top-0 left-0 right-0 h-8 bg-muted/50 flex items-center px-4">
+              <div className="glass h-[300px] md:h-[350px] rounded-xl overflow-hidden relative group shadow-subtle hover:shadow-glow-primary transition-all duration-500">
+                {/* Terminal header */}
+                <div className="absolute top-0 left-0 right-0 h-8 bg-foreground/10 backdrop-blur-sm flex items-center px-4">
                   <div className="flex gap-2">
                     <div className="h-3 w-3 rounded-full bg-red-500/70" />
                     <div className="h-3 w-3 rounded-full bg-yellow-500/70" />
                     <div className="h-3 w-3 rounded-full bg-green-500/70" />
                   </div>
+                  <div className="absolute inset-x-0 text-center text-xs text-foreground/50">codepilot-ai-terminal</div>
                 </div>
-                <div className="p-4 pt-10 overflow-hidden">
+                
+                {/* Code with shimmer effect */}
+                <div className="p-4 pt-10 overflow-hidden relative">
+                  <div className="absolute inset-0 w-[200%] h-full bg-shimmer opacity-10 group-hover:opacity-20" />
                   <pre className="text-xs md:text-sm">
                     <code className="language-typescript">
                       <span className="text-code-purple">class</span> <span className="text-code-blue">CodePilotAgent</span> {"{"}

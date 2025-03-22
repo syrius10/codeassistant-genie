@@ -72,12 +72,11 @@ export default {
 					cyan: '#0184bc',
 					gray: '#383a42',
 				},
-				// Updated text colors to black
 				text: {
-					primary: '#000000',
-					secondary: '#000000',
-					muted: '#000000',
-					subtle: '#000000'
+					primary: 'hsl(var(--foreground))',
+					secondary: 'hsl(var(--foreground)/80)',
+					muted: 'hsl(var(--muted-foreground))',
+					subtle: 'hsl(var(--foreground)/60)'
 				}
 			},
 			borderRadius: {
@@ -127,6 +126,22 @@ export default {
 						opacity: '0'
 					},
 				},
+				float: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' },
+				},
+				'scale-pulse': {
+					'0%, 100%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.05)' },
+				},
+				'rotate-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' },
+				},
+				shimmer: {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -138,18 +153,26 @@ export default {
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite',
 				typewriter: 'typewriter 4s steps(40) forwards',
 				blink: 'blink 1s step-end infinite',
+				float: 'float 3s ease-in-out infinite',
+				'scale-pulse': 'scale-pulse 3s ease-in-out infinite',
+				'rotate-slow': 'rotate-slow 12s linear infinite',
+				shimmer: 'shimmer 2s linear infinite',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+				shimmer: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
 			},
 			boxShadow: {
 				'subtle': '0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1)',
 				'elevation': '0 2px 15px rgba(0,0,0,0.05), 0 5px 30px -5px rgba(0,0,0,0.1)',
 				'inner-glow': 'inset 0 1px 1px rgba(255,255,255,0.5)',
+				'glow-primary': '0 0 15px rgba(59, 130, 246, 0.5)',
+				'glow-accent': '0 0 15px rgba(139, 92, 246, 0.5)',
 			},
 			transitionTimingFunction: {
 				'ios': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+				'bounce': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
 			},
 		}
 	},
