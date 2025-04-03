@@ -1,15 +1,25 @@
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, Github, Cpu, ExternalLink, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, Github, Cpu, ExternalLink, Sparkles, LogOut, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { useAuth } from '@/contexts/auth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -137,15 +147,42 @@ const Navbar = () => {
             </HoverCardContent>
           </HoverCard>
           
-          <Link to="/pricing">
-            <Button 
-              size="sm" 
-              className="bg-primary hover:bg-primary/90 transition-colors duration-300 button-glow group"
-            >
-              <Sparkles className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
-              <span>Get Started</span>
-            </Button>
-          </Link>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="outline" className="gap-2 group">
+                  <User className="h-4 w-4" />
+                  <span>Account</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={signOut}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/auth">
+              <Button 
+                size="sm" 
+                className="bg-primary hover:bg-primary/90 transition-colors duration-300 button-glow group"
+              >
+                <Sparkles className="h-4 w-4 mr-1 transition-transform duration-300 group-hover:rotate-12" />
+                <span>Sign In</span>
+              </Button>
+            </Link>
+          )}
         </div>
         
         <button 
@@ -225,10 +262,42 @@ const Navbar = () => {
                 <span>GitHub</span>
               </Button>
               
-              <Button className="w-full justify-center">
-                <Sparkles className="h-4 w-4 mr-1" />
-                <span>Get Started</span>
-              </Button>
+              {user ? (
+                <>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-center"
+                    onClick={() => {
+                      navigate('/dashboard');
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    className="w-full justify-center"
+                    onClick={() => {
+                      signOut();
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-1" />
+                    <span>Log out</span>
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  className="w-full justify-center"
+                  onClick={() => {
+                    navigate('/auth');
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  <span>Sign In</span>
+                </Button>
+              )}
             </div>
           </div>
         </div>
