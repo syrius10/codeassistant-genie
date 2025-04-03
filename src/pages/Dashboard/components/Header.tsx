@@ -1,34 +1,92 @@
 
-import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Cpu } from "lucide-react";
+import { useAuth } from "@/contexts/auth";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, LogOut, Settings, Code, HelpCircle, UserCircle } from "lucide-react";
 
 const Header = () => {
+  const { user, profile, signOut } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  const username = profile?.username || user?.email?.split('@')[0] || 'User';
+  const avatarUrl = profile?.avatar_url;
+  
   return (
-    <header className="bg-background/80 backdrop-blur-md border-b border-border z-40 py-4 px-6 sticky top-0">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-6">
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between py-4">
+        <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2">
-            <Cpu className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-xl">CodePilot.AI</span>
+            <Code className="h-6 w-6 text-primary" />
+            <span className="text-xl font-bold">CodePilot.AI</span>
           </Link>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <Link to="/dashboard" className="text-sm font-medium text-primary border-b-2 border-primary pb-1">Dashboard</Link>
-            <Link to="#" className="text-sm font-medium text-secondary hover:text-foreground transition-colors">Projects</Link>
-            <Link to="#" className="text-sm font-medium text-secondary hover:text-foreground transition-colors">Analytics</Link>
-            <Link to="/pricing" className="text-sm font-medium text-secondary hover:text-foreground transition-colors">Pricing</Link>
-            <Link to="#" className="text-sm font-medium text-secondary hover:text-foreground transition-colors">Settings</Link>
-          </nav>
         </div>
-        
-        <Link to="/">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            <span>Back to Home</span>
-          </Button>
-        </Link>
+
+        <div className="flex items-center gap-4">
+          <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={avatarUrl || ""} alt={username} />
+                  <AvatarFallback>
+                    {username.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <div className="flex items-center justify-start gap-2 p-2">
+                <div className="flex flex-col space-y-1 leading-none">
+                  {user?.email && (
+                    <p className="font-medium">{username}</p>
+                  )}
+                  {user?.email && (
+                    <p className="w-[200px] truncate text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard" className="cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/profile" className="cursor-pointer">
+                  <UserCircle className="mr-2 h-4 w-4" />
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <HelpCircle className="mr-2 h-4 w-4" />
+                Help
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive"
+                onClick={() => signOut()}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
