@@ -5,6 +5,8 @@ import { ChatMessages } from './ChatMessages';
 import { ChatInput } from './ChatInput';
 import { FreeTierPrompt } from './FreeTierPrompt';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 type SubscriptionTier = 'free' | 'pro' | 'enterprise';
 
@@ -17,13 +19,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleToggleMinimize = () => {
     setIsMinimized(!isMinimized);
   };
 
-  const handleSendMessage = (content: string) => {
-    if (!content.trim()) return;
+  const handleSendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return;
     
     // Add user message
     const userMessage: ChatMessage = {
@@ -36,23 +39,45 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     
-    // Simulate AI response timing based on tier
-    setTimeout(() => {
-      const responseDelay = userTier === 'enterprise' ? 800 : 2000;
+    try {
+      // Call the Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('ai-chat', {
+        body: { message: content, userTier }
+      });
       
-      setTimeout(() => {
-        // Add assistant message
-        const assistantMessage: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: getAIResponse(content, userTier),
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, assistantMessage]);
-        setIsLoading(false);
-      }, responseDelay);
-    }, 500);
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // Add assistant message
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.content,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error: any) {
+      console.error('Error calling AI chat function:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to get AI response. Please try again.',
+        variant: 'destructive',
+      });
+      
+      // Add error message
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error processing your request. Please try again.',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -92,37 +117,6 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
       )}
     </div>
   );
-};
-
-// Helper function for AI responses
-const getAIResponse = (input: string, tier: SubscriptionTier): string => {
-  const lowerInput = input.toLowerCase();
-  
-  if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-    return tier === 'enterprise' 
-      ? "Hello! I'm your priority AI assistant. How can I help you with your development workflow today?"
-      : "Hello! I'm your AI assistant. How can I help you with CodePilot.AI today?";
-  }
-  
-  if (lowerInput.includes('plan') || lowerInput.includes('subscription') || lowerInput.includes('upgrade')) {
-    return "You can view our subscription plans on the Pricing page. We offer Free, Pro, and Enterprise tiers with different feature sets. Would you like me to explain the differences?";
-  }
-  
-  if (lowerInput.includes('test') || lowerInput.includes('testing')) {
-    return tier === 'enterprise'
-      ? "Our Enterprise plan offers comprehensive testing capabilities including unit, integration, and end-to-end testing. You can use 'Advanced Test Generation' from your dashboard to automatically create tests for your codebase."
-      : "On the Pro plan, you have access to automated test generation for unit and integration tests. Navigate to the 'Generate Tests' section of your dashboard to get started.";
-  }
-  
-  if (lowerInput.includes('refactor') || lowerInput.includes('optimize')) {
-    return tier === 'enterprise'
-      ? "Enterprise users have access to our advanced AI refactoring tools. You can optimize your entire codebase with one click, or select specific files or functions to refactor. Would you like a step-by-step guide?"
-      : "Pro users can use our AI refactoring tools to improve code quality. Navigate to your repository in the dashboard and click 'Optimize Code' to get started.";
-  }
-  
-  return tier === 'enterprise'
-    ? "I'm here to provide priority assistance with your development workflow. Could you provide more details about what you need help with? I can assist with code optimization, test generation, CI/CD workflows, or any other CodePilot.AI features."
-    : "Thanks for your question. I can help you with using CodePilot.AI features like code suggestions, test generation, and more. Could you provide more specific details about what you need assistance with?";
 };
 
 // Define the ChatMessage type
