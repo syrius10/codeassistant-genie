@@ -10,6 +10,7 @@ import { compressImage } from "@/utils/imageCompression";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils"; // Added missing import for cn utility
 
 type Profile = Tables<"profiles">;
 
