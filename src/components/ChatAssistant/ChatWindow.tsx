@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessages } from './ChatMessages';
@@ -46,9 +45,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
     try {
       // Call the Supabase Edge Function
       const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: { message: content, userTier },
-        // Add response timeout to avoid hanging
-        responseType: 'json',
+        body: { message: content, userTier }
       });
       
       if (error) {
