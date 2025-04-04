@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Camera, Trash2, Loader2 } from "lucide-react";
+import { Camera, Trash2, Loader2, User as UserIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -88,8 +88,13 @@ export const AvatarSection = ({
         description: "Your profile avatar has been removed successfully.",
       });
       
-      // Update local state
-      setProfile(prev => prev ? { ...prev, avatar_url: null } : null);
+      // Update local state - fixed the type issue here
+      if (profile) {
+        setProfile({
+          ...profile,
+          avatar_url: null
+        });
+      }
       
     } catch (error: any) {
       toast({
@@ -105,7 +110,7 @@ export const AvatarSection = ({
       <Avatar className="h-24 w-24">
         <AvatarImage src={avatarUrl || ""} alt={username} />
         <AvatarFallback className="text-lg">
-          {username?.charAt(0)?.toUpperCase() || <User />}
+          {username?.charAt(0)?.toUpperCase() || <UserIcon />}
         </AvatarFallback>
       </Avatar>
       <div className="absolute -bottom-2 right-0 flex space-x-2">
