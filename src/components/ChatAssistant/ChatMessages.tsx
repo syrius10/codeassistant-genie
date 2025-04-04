@@ -1,8 +1,9 @@
 
 import React, { useRef, useEffect } from 'react';
-import { Bot, Cpu, Sparkles } from 'lucide-react';
+import { Bot, Cpu, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from './ChatWindow';
+import { Button } from '@/components/ui/button';
 
 type SubscriptionTier = 'free' | 'pro' | 'enterprise';
 
@@ -10,12 +11,16 @@ interface ChatMessagesProps {
   messages: ChatMessage[];
   isLoading: boolean;
   userTier: SubscriptionTier;
+  isError?: boolean;
+  onRetry?: () => void;
 }
 
 export const ChatMessages: React.FC<ChatMessagesProps> = ({ 
   messages, 
   isLoading, 
-  userTier 
+  userTier,
+  isError = false,
+  onRetry
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -115,6 +120,24 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                 <div className="h-2 w-2 rounded-full bg-primary animate-bounce animation-delay-400"></div>
               </div>
             </div>
+          </div>
+        )}
+        
+        {isError && onRetry && !isLoading && (
+          <div className="flex flex-col items-center justify-center gap-2 py-3 animate-fade-in">
+            <div className="flex items-center gap-2 text-destructive">
+              <AlertCircle className="h-4 w-4" />
+              <span className="text-sm">Connection error occurred</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1"
+              onClick={onRetry}
+            >
+              <RefreshCw className="h-3 w-3" />
+              Retry
+            </Button>
           </div>
         )}
         

@@ -15,8 +15,17 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import ChatAssistant from "./components/ChatAssistant";
+import { Navbar } from "./components/Navbar";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000, // 1 minute
+      retry: 1,
+      refetchOnWindowFocus: false
+    }
+  }
+});
 
 const AppContent = () => {
   const { userTier } = useSubscription();
@@ -24,23 +33,26 @@ const AppContent = () => {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          <Route path="/pricing" element={<Pricing />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Navbar />
+        <main className="flex-1 min-h-[calc(100vh-3.5rem)]">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/pricing" element={<Pricing />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
         <ChatAssistant userTier={userTier} />
       </BrowserRouter>
     </>
