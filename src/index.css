@@ -27,6 +27,28 @@
     --radius: 1rem;
   }
 
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 221 83% 53%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 249 89% 64%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 224 76% 48%;
+  }
+
   * {
     @apply border-border;
     scroll-behavior: smooth;
@@ -50,15 +72,15 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/40 rounded-xl transition-all shadow-md hover:shadow-lg duration-300;
+    @apply bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/40 dark:border-slate-700/40 rounded-xl transition-all shadow-md hover:shadow-lg duration-300;
   }
   
   .shadow-subtle {
-    @apply shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)];
+    @apply shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.2)];
   }
   
   .shadow-subtle-lg {
-    @apply shadow-[0_12px_40px_-8px_rgba(0,0,0,0.15)];
+    @apply shadow-[0_12px_40px_-8px_rgba(0,0,0,0.15)] dark:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.3)];
   }
   
   .text-gradient-primary {
@@ -125,6 +147,18 @@
   
   .pulse-soft {
     animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
   
   @keyframes floating {

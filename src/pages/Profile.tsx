@@ -8,6 +8,10 @@ import { Tables } from "@/integrations/supabase/types";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Profile = Tables<"profiles">;
 
@@ -15,6 +19,7 @@ const Profile = () => {
   const { user, loading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -24,54 +29,87 @@ const Profile = () => {
     }
   }, [user, loading, navigate]);
 
-  useEffect(() => {
-    async function fetchProfile() {
-      if (!user) return;
+  const fetchProfile = async () => {
+    if (!user) return;
+    
+    try {
+      setIsLoading(true);
+      setLoadError(null);
       
-      try {
-        setIsLoading(true);
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-          
-        if (error) throw error;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
         
-        if (data) {
-          setProfile(data);
-        }
-      } catch (error: any) {
+      if (error) throw error;
+      
+      if (data) {
+        setProfile(data);
+      } else {
+        // Handle case where profile doesn't exist
         toast({
-          title: "Error fetching profile",
-          description: error.message,
+          title: "Profile not found",
+          description: "Your profile information could not be loaded.",
           variant: "destructive",
         });
-      } finally {
-        setIsLoading(false);
+        setLoadError("Profile not found. Please try refreshing the page.");
       }
+    } catch (error: any) {
+      console.error("Error fetching profile:", error);
+      setLoadError(error.message || "Failed to load profile information");
+      toast({
+        title: "Error fetching profile",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-    
+  };
+
+  useEffect(() => {
     fetchProfile();
   }, [user, toast]);
 
-  if (isLoading) {
-    return <LoadingSpinner />;
+  if (loading || isLoading) {
+    return <LoadingSpinner aria-label="Loading profile" />;
   }
 
   return (
-    <div className="container max-w-4xl py-10">
-      <ProfileHeader 
-        title="User Profile" 
-        description="Manage your personal information" 
-      />
-      
-      <ProfileForm 
-        user={user} 
-        profile={profile} 
-        setProfile={setProfile} 
-      />
-    </div>
+    <ErrorBoundary>
+      <div className="container max-w-4xl py-10 px-4 md:px-0">
+        <ProfileHeader 
+          title="User Profile" 
+          description="Manage your personal information and account preferences" 
+        />
+        
+        {loadError ? (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error loading profile</AlertTitle>
+            <AlertDescription className="mt-2">
+              <p>{loadError}</p>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="mt-4" 
+                onClick={fetchProfile}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Try again
+              </Button>
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <ProfileForm 
+            user={user} 
+            profile={profile} 
+            setProfile={setProfile} 
+          />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 
