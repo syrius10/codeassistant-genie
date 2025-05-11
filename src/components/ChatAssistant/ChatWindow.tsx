@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
 
 type SubscriptionTier = 'free' | 'pro' | 'enterprise';
 
@@ -29,13 +30,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
   useEffect(() => {
     const checkSupabaseConnection = async () => {
       try {
-        // Simple ping to see if we can call a Supabase function
-        const { data, error } = await supabase.from('_dummy_query_').select('*').limit(1);
+        // Instead of querying a non-existent table, try the Supabase health check or functions API
+        const { error } = await supabase.functions.invoke('ai-chat', { 
+          body: { message: "ping", userTier }
+        });
         
-        // If we get an error about invalid relation, that means Supabase is connected
-        // but the table doesn't exist, which is fine for our test
-        const isConnected = error && error.message.includes('relation') ? true : !error;
-        
+        const isConnected = !error;
         setSupabaseConnected(isConnected);
         
         if (!isConnected) {
@@ -53,7 +53,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
     };
 
     checkSupabaseConnection();
-  }, [toast]);
+  }, [toast, userTier]);
 
   const handleToggleMinimize = () => {
     setIsMinimized(!isMinimized);
