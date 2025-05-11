@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessages } from './ChatMessages';
@@ -20,8 +21,39 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [supabaseConnected, setSupabaseConnected] = useState(true);
   const { toast } = useToast();
   const isMobile = useIsMobile();
+
+  // Check Supabase connection on component mount
+  useEffect(() => {
+    const checkSupabaseConnection = async () => {
+      try {
+        // Simple ping to see if we can call a Supabase function
+        const { data, error } = await supabase.from('_dummy_query_').select('*').limit(1);
+        
+        // If we get an error about invalid relation, that means Supabase is connected
+        // but the table doesn't exist, which is fine for our test
+        const isConnected = error && error.message.includes('relation') ? true : !error;
+        
+        setSupabaseConnected(isConnected);
+        
+        if (!isConnected) {
+          console.error('Supabase connection issue:', error);
+          toast({
+            title: "Connection Issue",
+            description: "Could not connect to Supabase. Chat functionality may be limited.",
+            variant: "destructive",
+          });
+        }
+      } catch (err) {
+        console.error('Error checking Supabase connection:', err);
+        setSupabaseConnected(false);
+      }
+    };
+
+    checkSupabaseConnection();
+  }, [toast]);
 
   const handleToggleMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -43,6 +75,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
     setIsError(false);
     
     try {
+      if (!supabaseConnected) {
+        throw new Error('Cannot connect to AI service. Please check your connection.');
+      }
+      
       // Call the Supabase Edge Function
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: { message: content, userTier }
@@ -126,6 +162,26 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userTier, onClose }) => 
         <>
           {userTier === 'free' ? (
             <FreeTierPrompt />
+          ) : !supabaseConnected ? (
+            <div className="flex flex-col items-center justify-center h-[calc(100%-56px)] p-6 text-center">
+              <div className="text-destructive mb-2">⚠️ Connection Error</div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Could not connect to the AI service. Please check your connection and try again.
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => {
+                  setSupabaseConnected(true);
+                  toast({
+                    title: "Reconnecting",
+                    description: "Attempting to reconnect to the AI service...",
+                  });
+                }}
+              >
+                Retry Connection
+              </Button>
+            </div>
           ) : (
             <>
               <ChatMessages 

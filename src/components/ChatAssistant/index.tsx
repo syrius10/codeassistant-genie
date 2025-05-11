@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { ChatButton } from './ChatButton';
 import { ChatWindow } from './ChatWindow';
+import { supabase } from '@/integrations/supabase/client';
 
 type SubscriptionTier = 'free' | 'pro' | 'enterprise';
 
